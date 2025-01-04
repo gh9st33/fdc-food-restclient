@@ -1,0 +1,31 @@
+name: Decompress Files
+
+on: [push]
+
+jobs:
+  decompress-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: compressed-data
+
+      - name: List contents in the workspace
+        run: ls -la ${{ github.workspace }}
+
+      - name: Decompress Directory
+        uses: somaz94/compress-decompress@v1
+        with:
+          command: decompress
+          source: ./fdc_client.zip
+          format: zip
+          dest: './fdc_client'
+
+      - name: Display Content of the Unpacked Files
+        run: |
+          ls -la ${{ github.workspace }}/fdc_client
+          cat ${{ github.workspace }}/fdc_client
